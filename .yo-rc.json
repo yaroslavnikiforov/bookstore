@@ -1,0 +1,14 @@
+{
+  "generator-kraken": {
+    "taskModule": "grunt",
+    "lintModule": "eslint",
+    "description": "Simple technology book stroe",
+    "author": "Yaroslav Nikiforov",
+    "templateModule": "makara",
+    "i18n": "i18n",
+    "componentPackager": "bower",
+    "cssModule": "sass",
+    "jsModule": "requirejs",
+    "useJson": null
+  }
+}
