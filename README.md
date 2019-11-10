@@ -1,4 +1,3 @@
-bookstore
-===========
+# bookstore
 
-Simple technology book stroe
+Technology book store
