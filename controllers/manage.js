@@ -49,36 +49,31 @@ module.exports = function(router) {
         var cover = req.body.cover && req.body.cover.trim();
 
         if (title == "" || price == "") {
-            req.flash("error", "Please fill out required fields");
             res.location("/manage/books/add");
             res.redirect("/manage/books/add");
-        }
-
-        if (isNaN(price)) {
-            req.flash("error", "Price must be a number");
+        } else if (isNaN(price)) {
             res.location("/manage/books/add");
             res.redirect("/manage/books/add");
+        } else {
+            var newBook = new Book({
+                title: title,
+                category: category,
+                description: description,
+                author: author,
+                publisher: publisher,
+                cover: cover,
+                price: price
+            });
+
+            newBook.save(function(err) {
+                if (err) {
+                    console.log("save error", err);
+                }
+
+                res.location("/manage/books");
+                res.redirect("/manage/books");
+            });
         }
-
-        var newBook = new Book({
-            title: title,
-            category: category,
-            description: description,
-            author: author,
-            publisher: publisher,
-            cover: cover,
-            price: price
-        });
-
-        newBook.save(function(err) {
-            if (err) {
-                console.log("save error", err);
-            }
-
-            req.flash("success", "Book Added");
-            res.location("/manage/books");
-            res.redirect("/manage/books");
-        });
     });
 
     // Edit Book
@@ -88,10 +83,9 @@ module.exports = function(router) {
                 if (err) {
                     console.log(err);
                 }
-                var model = {
-                    book: book,
-                    categories: categories
-                };
+
+                var model = { book, categories };
+
                 res.render("manage/books/edit", model);
             });
         });
@@ -123,7 +117,6 @@ module.exports = function(router) {
                     console.log("update error", err);
                 }
 
-                req.flash("success", "Book Updated");
                 res.location("/manage/books");
                 res.redirect("/manage/books");
             }
@@ -136,7 +129,7 @@ module.exports = function(router) {
             if (err) {
                 console.log(err);
             }
-            req.flash("success", "Book Deleted");
+
             res.location("/manage/books");
             res.redirect("/manage/books");
         });
@@ -167,24 +160,22 @@ module.exports = function(router) {
         var name = req.body.name && req.body.name.trim();
 
         if (name == "") {
-            req.flash("error", "Please fill out required fields");
             res.location("/manage/categories/add");
             res.redirect("/manage/categories/add");
+        } else {
+            var newCategory = new Category({
+                name: name
+            });
+
+            newCategory.save(function(err) {
+                if (err) {
+                    console.log("save error", err);
+                }
+
+                res.location("/manage/categories");
+                res.redirect("/manage/categories");
+            });
         }
-
-        var newCategory = new Category({
-            name: name
-        });
-
-        newCategory.save(function(err) {
-            if (err) {
-                console.log("save error", err);
-            }
-
-            req.flash("success", "Category Added");
-            res.location("/manage/categories");
-            res.redirect("/manage/categories");
-        });
     });
 
     // Display category edit form
@@ -214,7 +205,6 @@ module.exports = function(router) {
                     console.log("update error", err);
                 }
 
-                req.flash("success", "Category Updated");
                 res.location("/manage/categories");
                 res.redirect("/manage/categories");
             }
@@ -227,7 +217,7 @@ module.exports = function(router) {
             if (err) {
                 console.log(err);
             }
-            req.flash("success", "Category Deleted");
+
             res.location("/manage/categories");
             res.redirect("/manage/categories");
         });
